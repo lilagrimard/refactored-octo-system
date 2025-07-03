@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Draggable Ball</title>
+  <style>
+    body, html {
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #f0f0f0;
+    }
+    #ball {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background-color: #ff5722;
+      position: absolute;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div id="ball"></div>
+  <script>
+    const ball = document.getElementById('ball');
+    let isDragging = false;
+    let offsetX = 0;
+    let offsetY = 0;
+
+    ball.addEventListener('mousedown', (e) => {
+      isDragging = true;
+      offsetX = e.clientX - ball.offsetLeft;
+      offsetY = e.clientY - ball.offsetTop;
+    });
+
+    document.addEventListener('mousemove', (e) => {
+      if (!isDragging) return;
+      ball.style.left = (e.clientX - offsetX) + 'px';
+      ball.style.top = (e.clientY - offsetY) + 'px';
+    });
+
+    document.addEventListener('mouseup', () => {
+      isDragging = false;
+    });
+  </script>
+</body>
+</html>
