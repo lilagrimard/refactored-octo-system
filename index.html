@@ -30,17 +30,59 @@
     let isDragging = false;
     let offsetX = 0;
     let offsetY = 0;
+    let vx = 0;
+    let vy = 0;
+    const gravity = 0.5;
+    const bounce = 0.8;
+    let lastX = 0;
+    let lastY = 0;
+
+    function animate() {
+      if (!isDragging) {
+        vy += gravity;
+        ball.style.left = (ball.offsetLeft + vx) + 'px';
+        ball.style.top = (ball.offsetTop + vy) + 'px';
+
+        if (ball.offsetLeft <= 0) {
+          ball.style.left = '0px';
+          vx = -vx * bounce;
+        } else if (ball.offsetLeft + ball.offsetWidth >= window.innerWidth) {
+          ball.style.left = (window.innerWidth - ball.offsetWidth) + 'px';
+          vx = -vx * bounce;
+        }
+
+        if (ball.offsetTop + ball.offsetHeight >= window.innerHeight) {
+          ball.style.top = (window.innerHeight - ball.offsetHeight) + 'px';
+          vy = -vy * bounce;
+        } else if (ball.offsetTop <= 0) {
+          ball.style.top = '0px';
+          vy = -vy * bounce;
+        }
+      }
+      requestAnimationFrame(animate);
+    }
+    requestAnimationFrame(animate);
 
     ball.addEventListener('mousedown', (e) => {
       isDragging = true;
       offsetX = e.clientX - ball.offsetLeft;
       offsetY = e.clientY - ball.offsetTop;
+      vx = 0;
+      vy = 0;
+      lastX = e.clientX;
+      lastY = e.clientY;
     });
 
     document.addEventListener('mousemove', (e) => {
       if (!isDragging) return;
-      ball.style.left = (e.clientX - offsetX) + 'px';
-      ball.style.top = (e.clientY - offsetY) + 'px';
+      const x = e.clientX - offsetX;
+      const y = e.clientY - offsetY;
+      vx = e.clientX - lastX;
+      vy = e.clientY - lastY;
+      lastX = e.clientX;
+      lastY = e.clientY;
+      ball.style.left = x + 'px';
+      ball.style.top = y + 'px';
     });
 
     document.addEventListener('mouseup', () => {
